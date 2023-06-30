@@ -33,7 +33,7 @@ blank_output=blank
 img_h,img_w = blank.shape
 
 circle_stamp = np.zeros((100,100),dtype="uint8")
-circle_stamp = cv.circle(circle_stamp, (50,50), 30, 20, 3)## ตัว stamp # radian color thick
+circle_stamp = cv.circle(circle_stamp, (50,50), 29, 10, 2)## ตัว stamp # radian color thick
 # cv.imshow("stamp",circle_stamp)
 # cv.waitKey(0)
 # cv.destroyAllWindows()
@@ -42,7 +42,10 @@ for y in range(0,img_h):
     for x in range(0,img_w):
         if blank[y,x] > 200:
             ## วาดตัว stamp โดยยึดจุดที่มันอยู่เป็นจุดศุญกลาง
-            print(blank_output[y-50:y+50,x-50:x+50].shape)
+            
+            #กันตรวจสอบจนตกขอบ
+            if blank_output[y-50:y+50,x-50:x+50].shape != (100,100):
+                break
             blank_output[y-50:y+50,x-50:x+50] += circle_stamp[0:100,0:100]
 
 cv.imwrite("test_step3_display_center.png",blank_output)
