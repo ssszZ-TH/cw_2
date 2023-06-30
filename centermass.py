@@ -24,34 +24,25 @@ cv.drawContours(blank, contours, -1,
 
 cv.imwrite("test_step2_contours.png", blank)
 
+#blank มันมีกรอบ เละๆ ติดมา ต้อง padding 100px ก่อน
+blank = cv.copyMakeBorder(blank, 200, 200, 200, 200, cv.BORDER_CONSTANT, None, value = 0)
 
 
 #blank เป็นตัว check เขียนค่าออกไปที่ blankoutput
 blank_output=blank
 img_h,img_w = blank.shape
+
+circle_stamp = np.zeros((100,100),dtype="uint8")
+circle_stamp = cv.circle(circle_stamp, (50,50), 30, 20, 3)## ตัว stamp # radian color thick
+# cv.imshow("stamp",circle_stamp)
+# cv.waitKey(0)
+# cv.destroyAllWindows()
+
 for y in range(0,img_h):
     for x in range(0,img_w):
-        
-        if (blank[y,x] > 200):
-            # print("เจอสีขาว ที่ xy",x,y)
-            #blank_output = cv.circle(blank_output, (x,y), 56, 100, 1) #radian color bold
-            ## เเต่ผมต้องการใช้ของตัวเอง
-            r = 3
-            h = x
-            k = y
-            sampling_line=500
-
-            for y in range(y-r,y+r):
-                for x in range(x-r,x+r):
-                    if (x-h)**2 + (y-k)**2 > (r**2) and (x-h)**2 + (y-k)**2 < (r**2)+sampling_line:
-                        
-                        #หลุดกรอบก็ให้ข้าม
-                        if x<0 or y<0 or y>=594 or x>475:
-                            print("skip",x,y)
-                            continue
-                        
-                        print("draw at xy=",x,y)
-                        blank_output[x,y]=128
-            
+        if blank[y,x] > 200:
+            ## วาดตัว stamp โดยยึดจุดที่มันอยู่เป็นจุดศุญกลาง
+            print(blank_output[y-50:y+50,x-50:x+50].shape)
+            blank_output[y-50:y+50,x-50:x+50] += circle_stamp[0:100,0:100]
 
 cv.imwrite("test_step3_display_center.png",blank_output)
